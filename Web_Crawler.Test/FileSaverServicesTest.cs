@@ -11,28 +11,28 @@ namespace Web_Crawler.Test
     public class FileSaverServicesTest
     {
         private Mock<ILogger<FileSaverServices>> _logger;
-        private Mock<IFileAndDirectoryServices> _fileAndDirectoryServices;
-        FileSaverServices _directoryAndFileHandlerService;
+        private Mock<IFileAndDirectoryServices> _fileAndDirectoryServicesMock;
+        private FileSaverServices _fileSaverServices;
 
         public FileSaverServicesTest()
         {
             _logger = new();
-            _fileAndDirectoryServices = new();
-            _directoryAndFileHandlerService = new FileSaverServices(_logger.Object, _fileAndDirectoryServices.Object);
+            _fileAndDirectoryServicesMock = new();
+            _fileSaverServices = new FileSaverServices(_logger.Object, _fileAndDirectoryServicesMock.Object);
                 }
         [Fact(DisplayName = "Save files locally create")]
         public async Task Save_files_locally_creat()
         {
             //Arrange 
-            _fileAndDirectoryServices.Setup(f => f.CreateDirectory(It.IsAny<String>()));
-            _fileAndDirectoryServices.Setup(f => f.CreateFile(It.IsAny<string>(), It.IsAny<byte[]>())).Returns(Task.FromResult(Task.CompletedTask)); ;
+            _fileAndDirectoryServicesMock.Setup(f => f.CreateDirectory(It.IsAny<String>()));
+            _fileAndDirectoryServicesMock.Setup(f => f.CreateFile(It.IsAny<string>(), It.IsAny<byte[]>())).Returns(Task.FromResult(Task.CompletedTask)); ;
             
             //Act
-            await _directoryAndFileHandlerService.SaveLocally(It.IsAny<byte[]>(), "/");
+            await _fileSaverServices.SaveLocally(It.IsAny<byte[]>(), "/");
             
             //Assert
-            _fileAndDirectoryServices.Verify(f => f.CreateDirectory(It.IsAny<String>()),Times.Once);
-            _fileAndDirectoryServices.Verify(f => f.CreateFile(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Once);
+            _fileAndDirectoryServicesMock.Verify(f => f.CreateDirectory(It.IsAny<String>()),Times.Once);
+            _fileAndDirectoryServicesMock.Verify(f => f.CreateFile(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Once);
 
         }
     }

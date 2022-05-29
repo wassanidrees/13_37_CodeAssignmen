@@ -13,11 +13,11 @@ namespace Web_Crawler.Services
     public class FileSaverServices : IFileSaverServices
     {
         private ILogger _logger;
-        IFileAndDirectoryServices _fileServices;
-        public FileSaverServices(ILogger<FileSaverServices> logger, IFileAndDirectoryServices fileServices)
+        IFileAndDirectoryServices _fileAndDirectoryServices;
+        public FileSaverServices(ILogger<FileSaverServices> logger, IFileAndDirectoryServices fileAndDirectoryServices)
         {
             _logger = logger;
-            _fileServices = fileServices;
+            _fileAndDirectoryServices = fileAndDirectoryServices;
         }
         public async Task SaveLocally(byte[] ContentStream, string filePath)
         {
@@ -37,10 +37,10 @@ namespace Web_Crawler.Services
             }
             var fullFilePath = Path.Combine(Constants.SavingDirectory, directoryPath, filePathOnDrive);
             var directory = Path.GetDirectoryName(fullFilePath);
-            _fileServices.CreateDirectory(directory);
+            _fileAndDirectoryServices.CreateDirectory(directory);
             try
             {
-                await _fileServices.CreateFile(fullFilePath, ContentStream);
+                await _fileAndDirectoryServices.CreateFile(fullFilePath, ContentStream);
             }
             catch (IOException e)
             {
