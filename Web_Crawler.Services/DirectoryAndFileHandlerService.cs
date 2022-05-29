@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,8 +9,14 @@ using Web_Crawler.Services.Interfaces;
 
 namespace Web_Crawler.Services
 {
+    
     public class DirectoryAndFileHandlerService : IDirectoryAndFileHandlerService
     {
+        private ILogger _logger;
+        public DirectoryAndFileHandlerService(ILogger<DirectoryAndFileHandlerService> logger)
+        {
+            _logger = logger;
+        }
         public async Task WriteFileToDisk(string filePath, byte[] fileContent)
         {
             if(File.Exists(filePath))
@@ -18,7 +25,10 @@ namespace Web_Crawler.Services
             }
             using (var fileStream = new FileStream(filePath, FileMode.CreateNew))
             {
+                _logger.LogInformation("Saving file path: {0}", filePath);
                 await fileStream.WriteAsync(fileContent, 0, fileContent.Length);
+                _logger.LogInformation("Saving file finished");
+
             }
         }
 
@@ -50,6 +60,7 @@ namespace Web_Crawler.Services
             }
             catch (IOException e)
             {
+                _logger.LogError("Saving failed, message: {1}", fullFilePath, e.Message);
                 return;
             }
         }   
