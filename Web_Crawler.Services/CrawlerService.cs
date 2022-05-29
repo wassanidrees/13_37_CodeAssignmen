@@ -13,9 +13,9 @@ namespace Web_Crawler.Services
         private IHtmlLinksService _htmlLinkParser;
         private IWebPageRequestService _webPageRequest;
         private ConcurrentBag<string> _linkTracker;
-        private IDirectoryAndFileHandlerService _directoryAndFileHandler;
+        private IFileSaverServices _directoryAndFileHandler;
         private readonly ILogger _logger;
-        public CrawlerService(IHtmlLinksService htmlLinkParser, IWebPageRequestService webPageRequest, IDirectoryAndFileHandlerService directoryAndFileHandler, ILogger<CrawlerService> logger)
+        public CrawlerService(IHtmlLinksService htmlLinkParser, IWebPageRequestService webPageRequest, IFileSaverServices directoryAndFileHandler, ILogger<CrawlerService> logger)
         {
             _htmlLinkParser = htmlLinkParser;
             _webPageRequest = webPageRequest;

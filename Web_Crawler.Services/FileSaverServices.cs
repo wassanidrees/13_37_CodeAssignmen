@@ -9,28 +9,16 @@ using Web_Crawler.Services.Interfaces;
 
 namespace Web_Crawler.Services
 {
-    
-    public class DirectoryAndFileHandlerService : IDirectoryAndFileHandlerService
+
+    public class FileSaverServices : IFileSaverServices
     {
         private ILogger _logger;
-        public DirectoryAndFileHandlerService(ILogger<DirectoryAndFileHandlerService> logger)
+        IFileAndDirectoryServices _fileServices;
+        public FileSaverServices(ILogger<FileSaverServices> logger, IFileAndDirectoryServices fileServices)
         {
             _logger = logger;
+            _fileServices = fileServices;
         }
-        public async Task WriteFileToDisk(string filePath, byte[] fileContent)
-        {
-            if(File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-            using (var fileStream = new FileStream(filePath, FileMode.CreateNew))
-            {
-                _logger.LogInformation("Saving file path: {0}", filePath);
-                await fileStream.WriteAsync(fileContent, 0, fileContent.Length);
-                _logger.LogInformation("Saving file finished");
-            }
-        }
-
         public async Task SaveLocally(byte[] ContentStream, string filePath)
         {
             if (Path.DirectorySeparatorChar != '/')
@@ -49,19 +37,16 @@ namespace Web_Crawler.Services
             }
             var fullFilePath = Path.Combine(Constants.SavingDirectory, directoryPath, filePathOnDrive);
             var directory = Path.GetDirectoryName(fullFilePath);
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
+            _fileServices.CreateDirectory(directory);
             try
             {
-                await WriteFileToDisk(fullFilePath, ContentStream);
+                await _fileServices.CreateFile(fullFilePath, ContentStream);
             }
             catch (IOException e)
             {
                 _logger.LogError("Saving failed, message: {1}", fullFilePath, e.Message);
                 return;
             }
-        }   
+        }
     }
 }
