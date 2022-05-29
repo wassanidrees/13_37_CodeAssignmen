@@ -21,7 +21,6 @@ namespace Web_Crawler.Services
                 await fileStream.WriteAsync(fileContent, 0, fileContent.Length);
             }
         }
-       
 
         public async Task SaveLocally(byte[] ContentStream, string filePath)
         {
@@ -33,21 +32,13 @@ namespace Web_Crawler.Services
             {
                 filePath = Path.Combine(filePath, "index.html").TrimStart(Path.DirectorySeparatorChar);
             }
-
             var directoryPath = Path.GetDirectoryName(filePath);
             var filePathOnDrive = Path.GetFileName(filePath);
-
             if (!Path.HasExtension(filePathOnDrive) && !string.IsNullOrEmpty(filePathOnDrive))
             {
                 filePathOnDrive = Path.ChangeExtension(filePathOnDrive, "html");
             }
-            
-            //directoryPath = string.Join('_', directoryPath.Split(Path.GetInvalidPathChars()));
-            //var manageFilePath = filePathOnDrive.Split(Path.GetInvalidFileNameChars());
-            //filePathOnDrive = string.Join('_', manageFilePath);
-
             var fullFilePath = Path.Combine(Constants.SavingDirectory, directoryPath, filePathOnDrive);
-
             var directory = Path.GetDirectoryName(fullFilePath);
             if (!Directory.Exists(directory))
             {

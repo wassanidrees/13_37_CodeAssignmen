@@ -22,7 +22,6 @@ namespace Web_Crawler.Services
         private Task<HashSet<string>> ValidateLinks(MatchCollection matchResult, string PageUrl)
         {
             HashSet<string> ValidatedLinksResult = new HashSet<string>();
-
             for (int i = 0; i < matchResult.Count; i++)
             {
                 Match m = matchResult[i];
@@ -37,7 +36,6 @@ namespace Web_Crawler.Services
                     || link.StartsWith("tel")
                     || link.StartsWith("sms")
                     || link.Contains("{")) { continue; }
-
 
                 if (link.StartsWith("/"))
                 {

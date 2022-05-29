@@ -26,14 +26,14 @@ namespace Web_Crawler.Services
         }
         private async Task ExecuteCrawling(HashSet<string> links)
         {
-            var fetchTasks = new List<Task<WebPage>>();
+            var pageRequestTasks = new List<Task<WebPage>>();
             var filehandlerTask = new List<Task>();
             foreach (var currentLink in links)
             {
-                fetchTasks.Add(_webPageRequest.Request(currentLink));
+                pageRequestTasks.Add(_webPageRequest.Request(currentLink));
                 _linkTracker.Add(currentLink);
             }
-            var RequestsTaskResult = await Task.WhenAll(fetchTasks);
+            var RequestsTaskResult = await Task.WhenAll(pageRequestTasks);
             var foundLinks = new HashSet<string>();
             foreach (var item in RequestsTaskResult.Where(i => i.PageUrl != string.Empty))
             {
