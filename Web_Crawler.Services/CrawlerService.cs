@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,16 +14,21 @@ namespace Web_Crawler.Services
         private IWebPageRequestService _webPageRequest;
         private ConcurrentBag<string> _linkTracker;
         private IDirectoryAndFileHandlerService _directoryAndFileHandler;
-        public CrawlerService(IHtmlLinksService htmlLinkParser, IWebPageRequestService webPageRequest, IDirectoryAndFileHandlerService directoryAndFileHandler)
+        private readonly ILogger _logger;
+        public CrawlerService(IHtmlLinksService htmlLinkParser, IWebPageRequestService webPageRequest, IDirectoryAndFileHandlerService directoryAndFileHandler, ILogger<CrawlerService> logger)
         {
             _htmlLinkParser = htmlLinkParser;
             _webPageRequest = webPageRequest;
             _directoryAndFileHandler = directoryAndFileHandler;
             _linkTracker = new ConcurrentBag<string>();
+            _logger = logger;
         }
         public async Task StartCrawling()
         {
+            _logger.LogInformation("Scrapping Startd");
             await ExecuteCrawling(new HashSet<string>() { "/" });
+            _logger.LogInformation("Scrapping Ended");
+
         }
         private async Task ExecuteCrawling(HashSet<string> links)
         {

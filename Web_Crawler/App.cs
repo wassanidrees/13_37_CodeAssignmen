@@ -14,9 +14,7 @@ namespace Web_Crawler
             {
                 Directory.CreateDirectory(Constants.SavingDirectory);
             }
-            Console.WriteLine("Scrapping Startd");
             await crawlerService.StartCrawling();
-            Console.WriteLine("Scrapping Ended");
             Console.ReadKey();
         }
     }
