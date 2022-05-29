@@ -11,9 +11,9 @@ namespace Web_Crawler.Services
     {
         private HttpClient _httpClient;
         private ILogger _logger;
-        public WebPageRequestService(ILogger<WebPageRequestService> logger)
+        public WebPageRequestService(ILogger<WebPageRequestService> logger,HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(Constants.BaseURL);
             _logger = logger;
         }

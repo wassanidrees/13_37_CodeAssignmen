@@ -22,9 +22,10 @@ namespace Web_Crawler
           .ConfigureServices((_, collection) =>
           {
               collection.AddSingleton<ICrawlerService, CrawlerService>();
-              collection.AddSingleton<IWebPageRequestService, WebPageRequestService>();
+              collection.AddSingleton<IWebPageRequestService>(x=> new WebPageRequestService(x.GetService<ILogger<WebPageRequestService>>(),new System.Net.Http.HttpClient()));
               collection.AddSingleton<IHtmlLinksService, HtmlLinksService>();
-              collection.AddSingleton<IDirectoryAndFileHandlerService, DirectoryAndFileHandlerService>();
+              collection.AddSingleton<IFileSaverServices, FileSaverServices>();
+              collection.AddSingleton<IFileAndDirectoryServices, FileAndDirectoryServices>();
           })
           .ConfigureLogging((_, logging) =>
           {
