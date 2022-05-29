@@ -11,15 +11,15 @@ namespace Web_Crawler.Services
     public class CrawlerService : ICrawlerService
     {
         private IHtmlLinksService _htmlLinkParser;
-        private IWebPageRequestService _webPageRequest;
+        private IWebPageRequestService _webPageRequestService;
         private ConcurrentBag<string> _linkTracker;
-        private IFileSaverServices _directoryAndFileHandler;
+        private IFileSaverServices _fileSaverServices;
         private readonly ILogger _logger;
-        public CrawlerService(IHtmlLinksService htmlLinkParser, IWebPageRequestService webPageRequest, IFileSaverServices directoryAndFileHandler, ILogger<CrawlerService> logger)
+        public CrawlerService(IHtmlLinksService htmlLinkParser, IWebPageRequestService webPageRequestService, IFileSaverServices fileSaverServices, ILogger<CrawlerService> logger)
         {
             _htmlLinkParser = htmlLinkParser;
-            _webPageRequest = webPageRequest;
-            _directoryAndFileHandler = directoryAndFileHandler;
+            _webPageRequestService = webPageRequestService;
+            _fileSaverServices = fileSaverServices;
             _linkTracker = new ConcurrentBag<string>();
             _logger = logger;
         }
@@ -36,7 +36,7 @@ namespace Web_Crawler.Services
             var filehandlerTask = new List<Task>();
             foreach (var currentLink in links)
             {
-                pageRequestTasks.Add(_webPageRequest.Request(currentLink));
+                pageRequestTasks.Add(_webPageRequestService.Request(currentLink));
                 _linkTracker.Add(currentLink);
             }
             var RequestsTaskResult = await Task.WhenAll(pageRequestTasks);
@@ -44,7 +44,7 @@ namespace Web_Crawler.Services
             foreach (var item in RequestsTaskResult.Where(i => i.PageUrl != string.Empty))
             {
                 foundLinks.UnionWith(await _htmlLinkParser.ExtractLinks(item.ContentStream, item.PageUrl));
-                filehandlerTask.Add(_directoryAndFileHandler.SaveLocally(item.ContentStream, item.PageUrl));
+                filehandlerTask.Add(_fileSaverServices.SaveLocally(item.ContentStream, item.PageUrl));
             }
             foundLinks = foundLinks.Except(_linkTracker).ToHashSet();
 

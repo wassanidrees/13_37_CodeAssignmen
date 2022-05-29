@@ -13,7 +13,7 @@ namespace Web_Crawler.Test
     {
         private Mock<HttpClient> _httpClientMock;
         private Mock<ILogger<WebPageRequestService>> _logger;
-        WebPageRequestService webPageRequestService;
+        private WebPageRequestService webPageRequestService;
         public WebPageRequestServiceTest()
         {
             _httpClientMock = new();
